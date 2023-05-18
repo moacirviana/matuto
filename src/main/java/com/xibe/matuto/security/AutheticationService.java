@@ -1,4 +1,4 @@
-package com.xibe.matuto.service;
+package com.xibe.matuto.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,5 +18,6 @@ public class AutheticationService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return usuarioRepo.findByEmail(username);
 	}
+	
 
 }

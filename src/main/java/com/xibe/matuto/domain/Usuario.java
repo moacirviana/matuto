@@ -2,9 +2,17 @@ package com.xibe.matuto.domain;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,14 +22,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xibe.matuto.domain.enums.Perfil;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
 @Entity
 public class Usuario implements UserDetails {
 	private static final long serialVersionUID = -3868062160244287002L;
@@ -29,7 +29,7 @@ public class Usuario implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
 	@GenericGenerator(name = "native", strategy = "native")
-	private Integer id;
+	private Long id;
 
 	private String nome;
 
@@ -48,7 +48,7 @@ public class Usuario implements UserDetails {
 		addPerfil(Perfil.OPERADOR);
 	}
 
-	public Usuario(Integer codigo, String name, String senha, String email, int ativo) {
+	public Usuario(Long codigo, String name, String senha, String email, int ativo) {
 		this.id = codigo;
 		this.nome = name;
 		this.senha = senha;
@@ -65,11 +65,11 @@ public class Usuario implements UserDetails {
 		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -107,10 +107,7 @@ public class Usuario implements UserDetails {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		Integer result = 1;
-		result = prime * result + id;
-		return result;
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -122,9 +119,7 @@ public class Usuario implements UserDetails {
 		if (getClass() != obj.getClass())
 			return false;
 		Usuario other = (Usuario) obj;
-		if (id != other.id)
-			return false;
-		return true;
+		return Objects.equals(id, other.id);
 	}
 
 	@Override
@@ -135,7 +130,9 @@ public class Usuario implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority("ROLE_OPERADOR"));
+		// return List.of(new SimpleGrantedAuthority("ROLE_OPERADOR"));
+		return this.getPerfis().stream().map(x -> new SimpleGrantedAuthority(x.getDescricao()))
+				.collect(Collectors.toList());
 	}
 
 	@Override

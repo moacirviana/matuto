@@ -2,20 +2,25 @@ package com.xibe.matuto.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Produto implements Serializable {
@@ -43,17 +48,32 @@ public class Produto implements Serializable {
 	@JsonIgnore
 	private byte[] picture;
 	
+	@ManyToMany
+	@JoinTable(name = "produto_categoria",
+		joinColumns = @JoinColumn(name = "id_produto"),
+		inverseJoinColumns = @JoinColumn(name = "id_categoria"))	
+	private Set<Categoria> categories = new HashSet<>();
+	
 	public Produto() {}
 	
-	public Produto(Long id,
-			String titulo,
-			String descricao,
-			BigDecimal valor, byte[] picture) {
+
+	public Produto(Long id,	String titulo, String descricao,
+			BigDecimal valor, byte[] picture, Set<Categoria> categories) {
 		this.id = id;
 		this.titulo = titulo;
 		this.descricao = descricao;
 		this.valor = valor;
 		this.picture = picture;
+		this.categories = categories;
+	}
+
+
+	public Set<Categoria> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Categoria> categories) {
+		this.categories = categories;
 	}
 
 	public Long getId() {
