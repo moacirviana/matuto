@@ -1,6 +1,5 @@
 package com.xibe.matuto.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,13 @@ public class AuthController {
 	  var usuario = (Usuario)authentication.getPrincipal();
 	  return tokenService.gerarToken(usuario);
   }
-  
+  /*
   @PostMapping("/logout")
   public ResponseEntity<String> logout(HttpServletRequest request) {
       request.getSession().invalidate();
       return ResponseEntity.ok("Logout realizado com sucesso");
   }
-  
+  */
   @PostMapping("/refresh_token")
   public ResponseEntity<Void> refreshToken(HttpServletResponse response) {
 	  Usuario usuario = UserService.authenticated();

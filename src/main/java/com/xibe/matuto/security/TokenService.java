@@ -22,7 +22,7 @@ public class TokenService {
 				.withSubject(usuario.getEmail())
 				.withClaim("id", usuario.getId())
 				.withExpiresAt(LocalDateTime.now()
-						.plusSeconds(120)
+						.plusSeconds(1200)
 						.toInstant(ZoneOffset.of("-04:00"))
 				 ).sign(Algorithm.HMAC512(secret));
 				 
