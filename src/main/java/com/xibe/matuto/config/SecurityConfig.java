@@ -47,6 +47,7 @@ public class SecurityConfig {
 				.and().authorizeHttpRequests()
 				.antMatchers("/logout").permitAll()
 				.antMatchers(HttpMethod.POST, "/refresh_token").permitAll()
+				.antMatchers(HttpMethod.GET, "/home").permitAll()
 				.antMatchers(HttpMethod.POST, "/login").permitAll()
 				.antMatchers(HttpMethod.GET, "/produtos/**").permitAll()
 				.anyRequest().authenticated()
